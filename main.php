@@ -23,7 +23,7 @@ function chemicals_store_add_admin_menu() {
         'manage_options', 
         'chemicals_store', 
         'chemicals_store_display_admin_page', 
-        'dashicons-truck', 
+        'dashicons-database', 
         20 
     );
 }
