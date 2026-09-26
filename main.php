@@ -34,6 +34,8 @@ function chemicals_store_register_settings() {
     register_setting( 'chemicals_store_options', 'basic_product_ids' );
     register_setting( 'chemicals_store_options', 'oxidizer_product_ids' );
     register_setting( 'chemicals_store_options', 'reducing_agent_product_ids' );
+
+    register_setting( 'chemicals_system_behavior_options', 'separate_acid_base_boxes' );
 }
 
 function chemicals_store_display_admin_page() {
@@ -113,6 +115,7 @@ function chemicals_store_display_admin_page() {
             <div class="leftside">
                 <h1>WordPress Chemical Store Manager</h1>
                 <a href="admin.php?page=chemicals_store&option=chemicals_products_type" <?php if(isset($_GET['option']) && $_GET['option'] == "chemicals_products_type") { echo "class='active'"; } ?>>🧪 ประเภทสารเคมีในระบบ</a>
+                <a href="admin.php?page=chemicals_store&option=system_behavior" <?php if(isset($_GET['option']) && $_GET['option'] == "system_behavior") { echo "class='active'"; } ?>>📟 พฤติกรรมระบบ</a>
             </div>
             <div class="container">                
                 <?php if(isset($_GET['option']) && $_GET['option'] == "chemicals_products_type") { ?>
@@ -396,6 +399,20 @@ function chemicals_store_display_admin_page() {
                         document.getElementsByName(`${type}_product_ids`)[0].value = items.join(",");
                     }
                     </script>
+                </div>
+                <?php } else if(isset($_GET['option']) && $_GET['option'] == "system_behavior") { ?>
+                <h1>พฤติกรรมระบบ | WordPress Chemical Store Manager</h1>
+                <div style="padding: 0 25px 25px 25px;">
+                    <p>ตั้งค่าพฤติกรรมของระบบที่เกี่ยวข้องกับการจัดการสารเคมี</p>
+                    <form action="options.php" method="post">
+                        <?php
+                        settings_fields( 'chemicals_system_behavior_options' );
+                        ?>
+                        <input type="checkbox" name="separate_acid_base_boxes" id="separate_acid_base_boxes" value="1" <?php if(get_option('separate_acid_base_boxes') == 1) { echo "checked"; } ?>> กรดและเบสต้องแยกกล่องในการจัดส่ง
+                        <?php
+                        submit_button('บันทึกการตั้งค่า');
+                        ?>
+                    </form>
                 </div>
                 <?php } else { ?>
                 <h1>WordPress Chemical Store Manager</h1>
