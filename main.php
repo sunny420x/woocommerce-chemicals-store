@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WooCommerce Chemicals Store Manager
- * Description: ระบบจัดการร้านเคมีภัณฑ์สำหรับ WooCommerce
+ * Description: ระบบจัดการร้านเคมีภัณฑ์สำหรับ WooCommerce ปลั้กอินนี้จำเป็นต้องใช้งานระบบร่วมกับปลั้กอิน woocommerce-advance-shipping
  * Author: Jirakit Pawnsakungrungrot
  * Author URI: https://www.linkedin.com/in/sunny-jirakit
  * Plugin URI: https://github.com/sunny420x/woocommerce-chemicals-store
@@ -419,6 +419,8 @@ function chemicals_store_display_admin_page() {
                 <div style="padding: 0 25px 25px 25px;">
                     <h2>ระบบนี้คืออะไร ?</h2>
                     <p><strong>WordPress Chemical Store Manager</strong> เป็นปลั๊กอิน WordPress สำหรับจัดการร้านเคมีภัณฑ์</p>
+                    <p>ปลั้กอินนี้จำเป็นต้องใช้งานร่วมกับปลั้กอิน <strong><a href="https://github.com/sunny420x/woocommerce-advance-shipping" target="_blank">woocommerce-advance-shipping</a></strong>
+                    เพื่อให้สามารถจัดการการจัดส่งสารเคมีได้อย่างมีประสิทธิภาพ</p>
                     <h2>วิธีการติดตั้ง</h2>
                     <p>
                         สามารถติดตั้งปลั้กอินนี้ได้โดยการดาวน์โหลดไฟล์นี้จาก Github หน้านี้ และอัพโหลดลงในหน้า /wp-admin/plugin-install.php หลังจากอัพโหลด 
