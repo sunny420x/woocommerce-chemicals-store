@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WooCommerce Chemicals Store Manager
- * Description: ระบบจัดการร้านเคมีภัณฑ์สำหรับ WooCommerce ปลั้กอินนี้จำเป็นต้องใช้งานระบบร่วมกับปลั้กอิน woocommerce-advance-shipping
+ * Description: ระบบจัดการร้านเคมีภัณฑ์สำหรับ WooCommerce
  * Author: Jirakit Pawnsakungrungrot
  * Author URI: https://www.linkedin.com/in/sunny-jirakit
  * Plugin URI: https://github.com/sunny420x/woocommerce-chemicals-store
