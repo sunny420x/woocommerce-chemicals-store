@@ -96,7 +96,6 @@ function chemicals_store_display_admin_page() {
         }
     </style>
     <div class="white-label-zone no-print">
-        <!-- <span style="padding: 40px 10px 40px 40px;float: left;font-size: 60px;">📝</span> -->
         <img src="<?php echo esc_url( plugin_dir_url( __FILE__ ) . 'plugin-logo.jpg' ); ?>" " alt="Plugin Logo" style="width: 125px; height: auto; float: left; margin: 40px 10px 40px 20px; border-radius: 20px;">
         <div style="padding: 20px 0;">
             <h1>WordPress Chemical Store Manager</h1>
