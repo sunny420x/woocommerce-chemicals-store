@@ -19,7 +19,7 @@ add_action( 'admin_menu', 'chemicals_store_add_admin_menu' );
 function chemicals_store_add_admin_menu() {
     add_menu_page(
         'จัดการสารเคมี', 
-        'จัดการสารเคมีร้านเคมีภัณฑ์', 
+        'จัดการสารเคมี', 
         'manage_options', 
         'chemicals_store', 
         'chemicals_store_display_admin_page', 
