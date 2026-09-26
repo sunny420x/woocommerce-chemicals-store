@@ -166,7 +166,7 @@ function chemicals_store_display_admin_page() {
                                                 name="acid_products[<?php echo esc_attr($variation_id); ?>]" 
                                                 value="<?php echo esc_attr($variation_id); ?>" 
                                                 <?php checked($is_checked, true); ?> 
-                                                onchange="initProduct();"
+                                                onchange="initProduct('acid');"
                                             />
                                             <?php echo esc_html($product->get_title()) . ' (' . esc_html(urldecode($attributes_text)) . ')'; ?>
                                         </p>
@@ -178,7 +178,7 @@ function chemicals_store_display_admin_page() {
                                         $is_checked = true;
                                     }
                                 ?>
-                                    <p><input type="checkbox" name="acid_products[<?=$product->get_id()?>]" value="<?=$product->get_id()?>" <?php if($is_checked) { echo "checked"; } ?> onchange="initProduct();" /><?php echo esc_html($product->get_title()); ?></p>
+                                    <p><input type="checkbox" name="acid_products[<?=$product->get_id()?>]" value="<?=$product->get_id()?>" <?php if($is_checked) { echo "checked"; } ?> onchange="initProduct('acid');" /><?php echo esc_html($product->get_title()); ?></p>
                                 <?php
                                 }
                                 ?>
@@ -229,10 +229,10 @@ function chemicals_store_display_admin_page() {
                                         <p>
                                             <input 
                                                 type="checkbox" 
-                                                name="acid_products[<?php echo esc_attr($variation_id); ?>]" 
+                                                name="basic_products[<?php echo esc_attr($variation_id); ?>]" 
                                                 value="<?php echo esc_attr($variation_id); ?>" 
                                                 <?php checked($is_checked, true); ?> 
-                                                onchange="initProduct();"
+                                                onchange="initProduct('basic');"
                                             />
                                             <?php echo esc_html($product->get_title()) . ' (' . esc_html(urldecode($attributes_text)) . ')'; ?>
                                         </p>
@@ -244,7 +244,7 @@ function chemicals_store_display_admin_page() {
                                         $is_checked = true;
                                     }
                                 ?>
-                                    <p><input type="checkbox" name="basic_products[<?=$product->get_id()?>]" value="<?=$product->get_id()?>" <?php if($is_checked) { echo "checked"; } ?> onchange="initProduct();" /><?php echo esc_html($product->get_title()); ?></p>
+                                    <p><input type="checkbox" name="basic_products[<?=$product->get_id()?>]" value="<?=$product->get_id()?>" <?php if($is_checked) { echo "checked"; } ?> onchange="initProduct('basic');" /><?php echo esc_html($product->get_title()); ?></p>
                                 <?php
                                 }
                                 ?>
@@ -298,7 +298,7 @@ function chemicals_store_display_admin_page() {
                                                 name="oxidizer_products[<?php echo esc_attr($variation_id); ?>]" 
                                                 value="<?php echo esc_attr($variation_id); ?>" 
                                                 <?php checked($is_checked, true); ?> 
-                                                onchange="initProduct();"
+                                                onchange="initProduct('oxidizer');"
                                             />
                                             <?php echo esc_html($product->get_title()) . ' (' . esc_html(urldecode($attributes_text)) . ')'; ?>
                                         </p>
@@ -310,7 +310,7 @@ function chemicals_store_display_admin_page() {
                                         $is_checked = true;
                                     }
                                 ?>
-                                    <p><input type="checkbox" name="oxidizer_products[<?=$product->get_id()?>]" value="<?=$product->get_id()?>" <?php if($is_checked) { echo "checked"; } ?> onchange="initProduct();" /><?php echo esc_html($product->get_title()); ?></p>
+                                    <p><input type="checkbox" name="oxidizer_products[<?=$product->get_id()?>]" value="<?=$product->get_id()?>" <?php if($is_checked) { echo "checked"; } ?> onchange="initProduct('oxidizer');" /><?php echo esc_html($product->get_title()); ?></p>
                                 <?php
                                 }
                                 ?>
@@ -364,7 +364,7 @@ function chemicals_store_display_admin_page() {
                                                 name="reducing_agent_products[<?php echo esc_attr($variation_id); ?>]" 
                                                 value="<?php echo esc_attr($variation_id); ?>" 
                                                 <?php checked($is_checked, true); ?> 
-                                                onchange="initProduct();"
+                                                onchange="initProduct('reducing_agent');"
                                             />
                                             <?php echo esc_html($product->get_title()) . ' (' . esc_html(urldecode($attributes_text)) . ')'; ?>
                                         </p>
@@ -376,7 +376,7 @@ function chemicals_store_display_admin_page() {
                                         $is_checked = true;
                                     }
                                 ?>
-                                    <p><input type="checkbox" name="reducing_agent_products[<?=$product->get_id()?>]" value="<?=$product->get_id()?>" <?php if($is_checked) { echo "checked"; } ?> onchange="initProduct();" /><?php echo esc_html($product->get_title()); ?></p>
+                                    <p><input type="checkbox" name="reducing_agent_products[<?=$product->get_id()?>]" value="<?=$product->get_id()?>" <?php if($is_checked) { echo "checked"; } ?> onchange="initProduct('reducing_agent');" /><?php echo esc_html($product->get_title()); ?></p>
                                 <?php
                                 }
                                 ?>
@@ -386,6 +386,16 @@ function chemicals_store_display_admin_page() {
                         </div>
                         <?php submit_button('บันทึกการตั้งค่า'); ?>
                     </form>
+                    <script>
+                    function initProduct(type) {
+                        const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+                        let items = []
+                        checkedBoxes.forEach(item => {
+                            items.push(item.value)
+                        })
+                        document.getElementsByName(type + '_product_ids')[0].value = items.join(",");
+                    }
+                    </script>
                 </div>
                 <?php } else { ?>
                 <h1>WordPress Chemical Store Manager</h1>
