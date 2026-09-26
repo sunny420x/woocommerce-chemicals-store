@@ -112,11 +112,11 @@ function chemicals_store_display_admin_page() {
         <div style="display: flex;">
             <div class="leftside">
                 <h1>WordPress Chemical Store Manager</h1>
-                <a href="admin.php?page=chemicals_store&option=settings" <?php if(isset($_GET['option']) && $_GET['option'] == "settings") { echo "class='active'"; } ?>>⚙️ ตั้งค่าระบบ</a>
+                <a href="admin.php?page=chemicals_store&option=chemicals_products_type" <?php if(isset($_GET['option']) && $_GET['option'] == "chemicals_products_type") { echo "class='active'"; } ?>>🧪 ประเภทสารเคมีในระบบ</a>
             </div>
             <div class="container">                
-                <?php if(isset($_GET['option']) && $_GET['option'] == "settings") { ?>
-                <h1>WordPress Chemical Store Manager Settings</h1>
+                <?php if(isset($_GET['option']) && $_GET['option'] == "chemicals_products_type") { ?>
+                <h1>ประเภทสารเคมีในระบบ | WordPress Chemical Store Manager</h1>
                 <div style="padding: 0 25px 25px 25px;">
                     <form method="post" action="options.php">
                         <?php settings_fields( 'chemicals_store_options' ); ?>
