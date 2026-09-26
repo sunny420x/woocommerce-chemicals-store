@@ -18,8 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_action( 'admin_menu', 'chemicals_store_add_admin_menu' );
 function chemicals_store_add_admin_menu() {
     add_menu_page(
-        'Chemical Store Manager', 
-        'Chemical Store Manager', 
+        'จัดการสารเคมี', 
+        'จัดการสารเคมีร้านเคมีภัณฑ์', 
         'manage_options', 
         'chemicals_store', 
         'chemicals_store_display_admin_page', 
