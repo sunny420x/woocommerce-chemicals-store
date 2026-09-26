@@ -397,3 +397,168 @@ function chemicals_store_display_admin_page() {
     </div>
     <?php
 }
+
+add_filter(
+    'woocommerce_cart_shipping_packages',
+    'chemical_separate_shipping_packages',
+    10
+);
+
+function chemical_separate_shipping_packages($packages)
+{
+    if (!WC()->cart) {
+        return $packages;
+    }
+
+    // ดึงรายการสินค้า Chemical
+    $acid_ids = array_filter(array_map(
+        'intval',
+        array_map('trim', explode(',', get_option('acid_product_ids', '')))
+    ));
+
+    $base_ids = array_filter(array_map(
+        'intval',
+        array_map('trim', explode(',', get_option('basic_product_ids', '')))
+    ));
+
+    $oxidizer_ids = array_filter(array_map(
+        'intval',
+        array_map('trim', explode(',', get_option('oxidizer_product_ids', '')))
+    ));
+
+    $reducing_ids = array_filter(array_map(
+        'intval',
+        array_map('trim', explode(',', get_option('reducing_agent_product_ids', '')))
+    ));
+
+    $chemical_packages = array(
+        'acid' => array(),
+        'base' => array(),
+        'oxidizer' => array(),
+        'reducing_agent' => array(),
+    );
+
+    $normal_items = array();
+    foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) {
+        $product_id = !empty($cart_item['product_id'])
+            ? (int) $cart_item['product_id']
+            : 0;
+
+        $variation_id = !empty($cart_item['variation_id'])
+            ? (int) $cart_item['variation_id']
+            : 0;
+
+        $item_id = $variation_id > 0
+            ? $variation_id
+            : $product_id;
+
+        if (in_array($item_id, $acid_ids, true)) {
+
+            $chemical_packages['acid'][$cart_item_key] = $cart_item;
+
+            continue;
+        }
+
+        if (in_array($item_id, $base_ids, true)) {
+
+            $chemical_packages['base'][$cart_item_key] = $cart_item;
+
+            continue;
+        }
+
+        if (in_array($item_id, $oxidizer_ids, true)) {
+
+            $chemical_packages['oxidizer'][$cart_item_key] = $cart_item;
+
+            continue;
+        }
+
+        if (in_array($item_id, $reducing_ids, true)) {
+
+            $chemical_packages['reducing_agent'][$cart_item_key] = $cart_item;
+
+            continue;
+        }
+        $normal_items[$cart_item_key] = $cart_item;
+    }
+    $base_package = !empty($packages[0])
+        ? $packages[0]
+        : array();
+    $new_packages = array();
+    if (!empty($chemical_packages['acid'])) {
+        $package = $base_package;
+        $package['contents'] = $chemical_packages['acid'];
+        $package['contents_cost'] = 0;
+        foreach ($chemical_packages['acid'] as $item) {
+
+            $package['contents_cost'] +=
+                isset($item['line_total'])
+                    ? (float) $item['line_total']
+                    : 0;
+        }
+        $package['chemical_type'] = 'acid';
+        $new_packages[] = $package;
+    }
+
+    if (!empty($chemical_packages['base'])) {
+        $package = $base_package;
+        $package['contents'] = $chemical_packages['base'];
+        $package['contents_cost'] = 0;
+        foreach ($chemical_packages['base'] as $item) {
+
+            $package['contents_cost'] +=
+                isset($item['line_total'])
+                    ? (float) $item['line_total']
+                    : 0;
+        }
+        $package['chemical_type'] = 'base';
+        $new_packages[] = $package;
+    }
+
+    if (!empty($chemical_packages['oxidizer'])) {
+        $package = $base_package;
+        $package['contents'] = $chemical_packages['oxidizer'];
+        $package['contents_cost'] = 0;
+        foreach ($chemical_packages['oxidizer'] as $item) {
+
+            $package['contents_cost'] +=
+                isset($item['line_total'])
+                    ? (float) $item['line_total']
+                    : 0;
+        }
+        $package['chemical_type'] = 'oxidizer';
+        $new_packages[] = $package;
+    }
+
+    if (!empty($chemical_packages['reducing_agent'])) {
+        $package = $base_package;
+        $package['contents'] = $chemical_packages['reducing_agent'];
+        $package['contents_cost'] = 0;
+        foreach ($chemical_packages['reducing_agent'] as $item) {
+
+            $package['contents_cost'] +=
+                isset($item['line_total'])
+                    ? (float) $item['line_total']
+                    : 0;
+        }
+        $package['chemical_type'] = 'reducing_agent';
+        $new_packages[] = $package;
+    }
+
+    if (!empty($normal_items)) {
+        $package = $base_package;
+        $package['contents'] = $normal_items;
+        $package['contents_cost'] = 0;
+        foreach ($normal_items as $item) {
+
+            $package['contents_cost'] +=
+                isset($item['line_total'])
+                    ? (float) $item['line_total']
+                    : 0;
+        }
+        $package['chemical_type'] = 'normal';
+        $new_packages[] = $package;
+    }
+
+    return $new_packages;
+}
