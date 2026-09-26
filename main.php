@@ -388,12 +388,12 @@ function chemicals_store_display_admin_page() {
                     </form>
                     <script>
                     function initProduct(type) {
-                        const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+                        const checkedBoxes = document.querySelectorAll(`input[type="checkbox"][name^="${type}_products["]:checked`);
                         let items = []
                         checkedBoxes.forEach(item => {
                             items.push(item.value)
                         })
-                        document.getElementsByName(type + '_product_ids')[0].value = items.join(",");
+                        document.getElementsByName(`${type}_product_ids`)[0].value = items.join(",");
                     }
                     </script>
                 </div>
