@@ -1,3 +1,5 @@
+<img width="250" height="250" alt="plugin-logo" src="https://github.com/user-attachments/assets/572c6bb7-9881-41da-92a0-c10d260061e8" />
+
 # WooCommerce Chemicals Store Manager 
 
 ## ระบบนี้คืออะไร ?
