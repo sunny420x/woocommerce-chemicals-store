@@ -30,10 +30,10 @@ function chemicals_store_add_admin_menu() {
 
 add_action( 'admin_init', 'chemicals_store_register_settings' );
 function chemicals_store_register_settings() {
-    register_setting( 'chemicals_store_options', 'acid' );
-    register_setting( 'chemicals_store_options', 'basic' );
-    register_setting( 'chemicals_store_options', 'oxidizer' );
-    register_setting( 'chemicals_store_options', 'reducing_agent' );
+    register_setting( 'chemicals_store_options', 'acid_product_ids' );
+    register_setting( 'chemicals_store_options', 'basic_product_ids' );
+    register_setting( 'chemicals_store_options', 'oxidizer_product_ids' );
+    register_setting( 'chemicals_store_options', 'reducing_agent_product_ids' );
 }
 
 function chemicals_store_display_admin_page() {
@@ -112,7 +112,6 @@ function chemicals_store_display_admin_page() {
         <div style="display: flex;">
             <div class="leftside">
                 <h1>WordPress Chemical Store Manager</h1>
-                <a href="admin.php?page=chemicals_store&option=create" <?php if(isset($_GET['option']) && $_GET['option'] == "create") { echo "class='active'"; } ?>>📝 สร้างบทความใหม่เลย</a>
                 <a href="admin.php?page=chemicals_store&option=settings" <?php if(isset($_GET['option']) && $_GET['option'] == "settings") { echo "class='active'"; } ?>>⚙️ ตั้งค่าระบบ</a>
             </div>
             <div class="container">                
@@ -121,7 +120,270 @@ function chemicals_store_display_admin_page() {
                 <div style="padding: 0 25px 25px 25px;">
                     <form method="post" action="options.php">
                         <?php settings_fields( 'chemicals_store_options' ); ?>
-                        <?php do_settings_sections( 'chemicals_store_options' ); ?>
+
+                        <h2> IDs ของสินค้าที่อยู่ในประเภท กรด (Acid):</h2>
+                        <input type="text" name="acid_product_ids" value="<?php echo esc_attr(get_option('acid_product_ids', '')); ?>" style="width: 100%;"/>
+                        <br>
+                        <div style="height: 400px; overflow: auto;">
+                            <?php
+                            $args = array(
+                                'status'  => 'publish',
+                                'limit'   => -1, // -1 pulls all items
+                                'orderby' => 'name',
+                                'order'   => 'ASC',
+                            );
+
+                            $all_products = wc_get_products($args);
+
+                            $acid_product_ids = explode(",", get_option('acid_product_ids', ''));
+
+                            foreach ($all_products as $product) {
+                                ?>
+                                
+                                <?php
+                                if ($product->get_type() == 'variable') {
+                                    $variations = $product->get_available_variations();
+                                    
+                                    foreach ($variations as $variation) {
+                                        $variation_id = $variation['variation_id'];
+                                        $is_checked = false;
+    
+                                        if (!empty($acid_product_ids) && in_array($variation_id, $acid_product_ids)) {
+                                            $is_checked = true;
+                                        }
+            
+                                        $attribute_labels = [];
+                                        foreach ($variation['attributes'] as $key => $value) {
+                                            $attr_name = str_replace('attribute_', '', $key);
+                                            $attr_name = wc_attribute_label($attr_name); 
+                                            $attribute_labels[] = $attr_name . ': ' . ucfirst($value);
+                                        }
+                                        $attributes_text = implode(', ', $attribute_labels);
+                                        ?>
+                                        <p>
+                                            <input 
+                                                type="checkbox" 
+                                                name="acid_products[<?php echo esc_attr($variation_id); ?>]" 
+                                                value="<?php echo esc_attr($variation_id); ?>" 
+                                                <?php checked($is_checked, true); ?> 
+                                                onchange="initProduct();"
+                                            />
+                                            <?php echo esc_html($product->get_title()) . ' (' . esc_html(urldecode($attributes_text)) . ')'; ?>
+                                        </p>
+                                        <?php
+                                    }
+                                } else {
+                                    $is_checked = false;
+                                    if (!empty($acid_product_ids) && in_array($product->get_id(), $acid_product_ids)) {
+                                        $is_checked = true;
+                                    }
+                                ?>
+                                    <p><input type="checkbox" name="acid_products[<?=$product->get_id()?>]" value="<?=$product->get_id()?>" <?php if($is_checked) { echo "checked"; } ?> onchange="initProduct();" /><?php echo esc_html($product->get_title()); ?></p>
+                                <?php
+                                }
+                                ?>
+                            <?php
+                            }
+                            ?>
+                        </div>
+
+                        <h2> IDs ของสินค้าที่อยู่ในประเภท เบส (Base):</h2>
+                        <input type="text" name="basic_product_ids" value="<?php echo esc_attr(get_option('basic_product_ids', '')); ?>" style="width: 100%;"/>
+                        <br>
+                        <div style="height: 400px; overflow: auto;">
+                            <?php
+                            $args = array(
+                                'status'  => 'publish',
+                                'limit'   => -1, // -1 pulls all items
+                                'orderby' => 'name',
+                                'order'   => 'ASC',
+                            );
+
+                            $all_products = wc_get_products($args);
+
+                            $basic_product_ids = explode(",", get_option('basic_product_ids', ''));
+
+                            foreach ($all_products as $product) {
+                                ?>
+                                
+                                <?php
+                                if ($product->get_type() == 'variable') {
+                                    $variations = $product->get_available_variations();
+                                    
+                                    foreach ($variations as $variation) {
+                                        $variation_id = $variation['variation_id'];
+                                        $is_checked = false;
+    
+                                        if (!empty($basic_product_ids) && in_array($variation_id, $basic_product_ids)) {
+                                            $is_checked = true;
+                                        }
+            
+                                        $attribute_labels = [];
+                                        foreach ($variation['attributes'] as $key => $value) {
+                                            $attr_name = str_replace('attribute_', '', $key);
+                                            $attr_name = wc_attribute_label($attr_name); 
+                                            $attribute_labels[] = $attr_name . ': ' . ucfirst($value);
+                                        }
+                                        $attributes_text = implode(', ', $attribute_labels);
+                                        ?>
+                                        <p>
+                                            <input 
+                                                type="checkbox" 
+                                                name="acid_products[<?php echo esc_attr($variation_id); ?>]" 
+                                                value="<?php echo esc_attr($variation_id); ?>" 
+                                                <?php checked($is_checked, true); ?> 
+                                                onchange="initProduct();"
+                                            />
+                                            <?php echo esc_html($product->get_title()) . ' (' . esc_html(urldecode($attributes_text)) . ')'; ?>
+                                        </p>
+                                        <?php
+                                    }
+                                } else {
+                                    $is_checked = false;
+                                    if (!empty($basic_product_ids) && in_array($product->get_id(), $basic_product_ids)) {
+                                        $is_checked = true;
+                                    }
+                                ?>
+                                    <p><input type="checkbox" name="basic_products[<?=$product->get_id()?>]" value="<?=$product->get_id()?>" <?php if($is_checked) { echo "checked"; } ?> onchange="initProduct();" /><?php echo esc_html($product->get_title()); ?></p>
+                                <?php
+                                }
+                                ?>
+                            <?php
+                            }
+                            ?>
+                        </div>
+
+                        <h2> IDs ของสินค้าที่อยู่ในประเภท ตัวทำออกซิไดซ์ (Oxidizer):</h2>
+                        <input type="text" name="oxidizer_product_ids" value="<?php echo esc_attr(get_option('oxidizer_product_ids', '')); ?>" style="width: 100%;"/>
+                        <br>
+                        <div style="height: 400px; overflow: auto;">
+                            <?php
+                            $args = array(
+                                'status'  => 'publish',
+                                'limit'   => -1, // -1 pulls all items
+                                'orderby' => 'name',
+                                'order'   => 'ASC',
+                            );
+
+                            $all_products = wc_get_products($args);
+
+                            $oxidizer_product_ids = explode(",", get_option('oxidizer_product_ids', ''));
+
+                            foreach ($all_products as $product) {
+                                ?>
+                                
+                                <?php
+                                if ($product->get_type() == 'variable') {
+                                    $variations = $product->get_available_variations();
+                                    
+                                    foreach ($variations as $variation) {
+                                        $variation_id = $variation['variation_id'];
+                                        $is_checked = false;
+    
+                                        if (!empty($oxidizer_product_ids) && in_array($variation_id, $oxidizer_product_ids)) {
+                                            $is_checked = true;
+                                        }
+            
+                                        $attribute_labels = [];
+                                        foreach ($variation['attributes'] as $key => $value) {
+                                            $attr_name = str_replace('attribute_', '', $key);
+                                            $attr_name = wc_attribute_label($attr_name); 
+                                            $attribute_labels[] = $attr_name . ': ' . ucfirst($value);
+                                        }
+                                        $attributes_text = implode(', ', $attribute_labels);
+                                        ?>
+                                        <p>
+                                            <input 
+                                                type="checkbox" 
+                                                name="oxidizer_products[<?php echo esc_attr($variation_id); ?>]" 
+                                                value="<?php echo esc_attr($variation_id); ?>" 
+                                                <?php checked($is_checked, true); ?> 
+                                                onchange="initProduct();"
+                                            />
+                                            <?php echo esc_html($product->get_title()) . ' (' . esc_html(urldecode($attributes_text)) . ')'; ?>
+                                        </p>
+                                        <?php
+                                    }
+                                } else {
+                                    $is_checked = false;
+                                    if (!empty($oxidizer_product_ids) && in_array($product->get_id(), $oxidizer_product_ids)) {
+                                        $is_checked = true;
+                                    }
+                                ?>
+                                    <p><input type="checkbox" name="oxidizer_products[<?=$product->get_id()?>]" value="<?=$product->get_id()?>" <?php if($is_checked) { echo "checked"; } ?> onchange="initProduct();" /><?php echo esc_html($product->get_title()); ?></p>
+                                <?php
+                                }
+                                ?>
+                            <?php
+                            }
+                            ?>
+                        </div>
+                        
+                        <h2> IDs ของสินค้าที่อยู่ในประเภท รีดิวซิงเอเจนต์ (Reducing Agent):</h2>
+                        <input type="text" name="reducing_agent_product_ids" value="<?php echo esc_attr(get_option('reducing_agent_product_ids', '')); ?>" style="width: 100%;"/>
+                        <br>
+                        <div style="height: 400px; overflow: auto;">
+                            <?php
+                            $args = array(
+                                'status'  => 'publish',
+                                'limit'   => -1, // -1 pulls all items
+                                'orderby' => 'name',
+                                'order'   => 'ASC',
+                            );
+
+                            $all_products = wc_get_products($args);
+
+                            $reducing_agent_product_ids = explode(",", get_option('reducing_agent_product_ids', ''));
+
+                            foreach ($all_products as $product) {
+                                ?>
+                                
+                                <?php
+                                if ($product->get_type() == 'variable') {
+                                    $variations = $product->get_available_variations();
+                                    
+                                    foreach ($variations as $variation) {
+                                        $variation_id = $variation['variation_id'];
+                                        $is_checked = false;
+    
+                                        if (!empty($reducing_agent_product_ids) && in_array($variation_id, $reducing_agent_product_ids)) {
+                                            $is_checked = true;
+                                        }
+            
+                                        $attribute_labels = [];
+                                        foreach ($variation['attributes'] as $key => $value) {
+                                            $attr_name = str_replace('attribute_', '', $key);
+                                            $attr_name = wc_attribute_label($attr_name); 
+                                            $attribute_labels[] = $attr_name . ': ' . ucfirst($value);
+                                        }
+                                        $attributes_text = implode(', ', $attribute_labels);
+                                        ?>
+                                        <p>
+                                            <input 
+                                                type="checkbox" 
+                                                name="reducing_agent_products[<?php echo esc_attr($variation_id); ?>]" 
+                                                value="<?php echo esc_attr($variation_id); ?>" 
+                                                <?php checked($is_checked, true); ?> 
+                                                onchange="initProduct();"
+                                            />
+                                            <?php echo esc_html($product->get_title()) . ' (' . esc_html(urldecode($attributes_text)) . ')'; ?>
+                                        </p>
+                                        <?php
+                                    }
+                                } else {
+                                    $is_checked = false;
+                                    if (!empty($reducing_agent_product_ids) && in_array($product->get_id(), $reducing_agent_product_ids)) {
+                                        $is_checked = true;
+                                    }
+                                ?>
+                                    <p><input type="checkbox" name="reducing_agent_products[<?=$product->get_id()?>]" value="<?=$product->get_id()?>" <?php if($is_checked) { echo "checked"; } ?> onchange="initProduct();" /><?php echo esc_html($product->get_title()); ?></p>
+                                <?php
+                                }
+                                ?>
+                            <?php
+                            }
+                            ?>
+                        </div>
                         <?php submit_button('บันทึกการตั้งค่า'); ?>
                     </form>
                 </div>
