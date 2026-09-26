@@ -122,27 +122,26 @@ function chemicals_store_display_admin_page() {
                 <h1>ประเภทสารเคมีในระบบ | WordPress Chemical Store Manager</h1>
                 <div style="padding: 0 25px 25px 25px;">
                     <form method="post" action="options.php">
-                        <?php settings_fields( 'chemicals_store_options' ); ?>
+                        <?php 
+                        settings_fields( 'chemicals_store_options' );
+                        $args = array(
+                            'status'  => 'publish',
+                            'limit'   => -1, // -1 pulls all items
+                            'orderby' => 'name',
+                            'order'   => 'ASC',
+                        );
+
+                        $all_products = wc_get_products($args);
+                        ?>
 
                         <h2> IDs ของสินค้าที่อยู่ในประเภท กรด (Acid):</h2>
                         <input type="text" name="acid_product_ids" value="<?php echo esc_attr(get_option('acid_product_ids', '')); ?>" style="width: 100%;"/>
                         <br>
                         <div style="height: 400px; overflow: auto;">
                             <?php
-                            $args = array(
-                                'status'  => 'publish',
-                                'limit'   => -1, // -1 pulls all items
-                                'orderby' => 'name',
-                                'order'   => 'ASC',
-                            );
-
-                            $all_products = wc_get_products($args);
-
                             $acid_product_ids = explode(",", get_option('acid_product_ids', ''));
-
                             foreach ($all_products as $product) {
                                 ?>
-                                
                                 <?php
                                 if ($product->get_type() == 'variable') {
                                     $variations = $product->get_available_variations();
@@ -195,20 +194,9 @@ function chemicals_store_display_admin_page() {
                         <br>
                         <div style="height: 400px; overflow: auto;">
                             <?php
-                            $args = array(
-                                'status'  => 'publish',
-                                'limit'   => -1, // -1 pulls all items
-                                'orderby' => 'name',
-                                'order'   => 'ASC',
-                            );
-
-                            $all_products = wc_get_products($args);
-
                             $basic_product_ids = explode(",", get_option('basic_product_ids', ''));
-
                             foreach ($all_products as $product) {
                                 ?>
-                                
                                 <?php
                                 if ($product->get_type() == 'variable') {
                                     $variations = $product->get_available_variations();
@@ -261,21 +249,8 @@ function chemicals_store_display_admin_page() {
                         <br>
                         <div style="height: 400px; overflow: auto;">
                             <?php
-                            $args = array(
-                                'status'  => 'publish',
-                                'limit'   => -1, // -1 pulls all items
-                                'orderby' => 'name',
-                                'order'   => 'ASC',
-                            );
-
-                            $all_products = wc_get_products($args);
-
                             $oxidizer_product_ids = explode(",", get_option('oxidizer_product_ids', ''));
-
                             foreach ($all_products as $product) {
-                                ?>
-                                
-                                <?php
                                 if ($product->get_type() == 'variable') {
                                     $variations = $product->get_available_variations();
                                     
@@ -327,21 +302,8 @@ function chemicals_store_display_admin_page() {
                         <br>
                         <div style="height: 400px; overflow: auto;">
                             <?php
-                            $args = array(
-                                'status'  => 'publish',
-                                'limit'   => -1, // -1 pulls all items
-                                'orderby' => 'name',
-                                'order'   => 'ASC',
-                            );
-
-                            $all_products = wc_get_products($args);
-
                             $reducing_agent_product_ids = explode(",", get_option('reducing_agent_product_ids', ''));
-
                             foreach ($all_products as $product) {
-                                ?>
-                                
-                                <?php
                                 if ($product->get_type() == 'variable') {
                                     $variations = $product->get_available_variations();
                                     
